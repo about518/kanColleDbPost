@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 
-namespace KanColleDb
+namespace KanColleDbPost
 {
     static class Program
     {

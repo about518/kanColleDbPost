@@ -1,4 +1,4 @@
-﻿namespace KanColleDb
+﻿namespace KanColleDbPost
 {
     partial class Form1
     {
@@ -31,9 +31,9 @@
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.button1 = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
-            this.textBox2 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // textBox1
@@ -70,14 +70,6 @@
             this.button2.UseVisualStyleBackColor = true;
             this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(77, 259);
-            this.textBox2.MaxLength = 27;
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(308, 19);
-            this.textBox2.TabIndex = 3;
-            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -96,6 +88,16 @@
             this.checkBox1.TabIndex = 5;
             this.checkBox1.Text = "Debug";
             this.checkBox1.UseVisualStyleBackColor = true;
+            // 
+            // textBox2
+            // 
+            this.textBox2.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::KanColleDbPost.Properties.Settings.Default, "AccessKey", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+            this.textBox2.Location = new System.Drawing.Point(77, 259);
+            this.textBox2.MaxLength = 27;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(308, 19);
+            this.textBox2.TabIndex = 3;
+            this.textBox2.Text = global::KanColleDbPost.Properties.Settings.Default.AccessKey;
             // 
             // Form1
             // 

@@ -12,7 +12,7 @@ using System.IO;
 using System.Web;
 using Fiddler;
 
-namespace KanColleDb
+namespace KanColleDbPost
 {
     public partial class Form1 : Form
     {
@@ -23,28 +23,51 @@ namespace KanColleDb
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Fiddler.FiddlerApplication.AfterSessionComplete += FiddlerApplication_AfterSessionComplete;
+            FiddlerApplication.AfterSessionComplete += FiddlerApplication_AfterSessionComplete;
         }
 
+        public enum UrlType
+        {
+            SHIP2,
+            DECK,
+            DECK_PORT,
+            BASIC,
+            CREATESHIP,
+            GETSHIP,
+            CREATEITEM,
+            START,
+            NEXT,
+            BATTLE,
+            BATTLE_MIDNIGHT,
+            BATTLE_SP_MIDNIGHT,
+            BATTLE_NIGHT_TO_DAY,
+            BATTLERESULT,
+            PRACTICE_BATTLE,
+            PRACTICE_BATTLERESULT
+        };
+
+        public Dictionary<UrlType, string> urls = new Dictionary<UrlType, string>()
+        {
+            { UrlType.SHIP2,                    "api_get_member/ship2"                },
+            { UrlType.DECK,                     "api_get_member/deck"                 },
+            { UrlType.DECK_PORT,                "api_get_member/deck_port"            },
+            { UrlType.BASIC,                    "api_get_member/basic"                },
+            { UrlType.CREATESHIP,               "api_req_kousyou/createship"          },
+            { UrlType.GETSHIP,                  "api_req_kousyou/getship"             },
+            { UrlType.CREATEITEM,               "api_req_kousyou/createitem"          },
+            { UrlType.START,                    "api_req_map/start"                   },
+            { UrlType.NEXT,                     "api_req_map/next"                    },
+            { UrlType.BATTLE,                   "api_req_sortie/battle"               },
+            { UrlType.BATTLE_MIDNIGHT,          "api_req_battle_midnight/battle"      },
+            { UrlType.BATTLE_SP_MIDNIGHT,       "api_req_battle_midnight/sp_midnight" },
+            { UrlType.BATTLE_NIGHT_TO_DAY,      "api_req_sortie/night_to_day"         },
+            { UrlType.BATTLERESULT,             "api_req_sortie/battleresult"         },
+            { UrlType.PRACTICE_BATTLE,          "api_req_practice/battle"             },
+            { UrlType.PRACTICE_BATTLERESULT,    "api_req_practice/battle_result"      },
+        };
+        
         void FiddlerApplication_AfterSessionComplete(Fiddler.Session oSession)
         {
-            string[] keys = new string[]
-            {
-		        "api_req_kousyou/createship",
-		        "api_req_kousyou/getship",
-		        "api_req_kousyou/createitem",
-		        "api_get_member/basic",
-		        "api_get_member/deck",
-		        "api_get_member/deck_port",
-                "api_get_member/ship2",
-		        "api_req_map/start",
-		        "api_req_map/next",
-		        "api_req_sortie/battle",
-		        "api_req_battle_midnight/battle",
-		        "api_req_sortie/battleresult",
-		        "api_req_practice/battle",
-		        "api_req_practice/battle_result"
-            };
             string url = oSession.fullUrl;
             if( url.IndexOf("/kcsapi/") <= 0 )
             {
@@ -54,10 +77,14 @@ namespace KanColleDb
                 }
                 return;
             }
-            foreach (string key in keys)
+
+            foreach (KeyValuePair<UrlType, string> kvp in urls)
             {
-                if (url.IndexOf(key) > 0)
+                if (url.IndexOf(kvp.Value) > 0)
                 {
+                    string responseBody = oSession.GetResponseBodyAsString();
+                    responseBody.Replace("svdata=", "");
+
                     string str = "Post server from " + url + "\n";
                     AppendText(str);
 
@@ -70,16 +97,17 @@ namespace KanColleDb
             if (checkBox1.Checked)
             {
                 AppendText(url + "\n");
-                }
+            }
         }
 
-        private string PostServer(Fiddler.Session oSession)
+        private string PostServer(Session oSession)
         {
             string token = textBox2.Text;                   // TODO: ユーザー毎のトークンを設定
             string agent = "********************";          // TODO: アプリ毎のトークンを設定
             string url = oSession.fullUrl;
             string requestBody = oSession.GetRequestBodyAsString();
             string responseBody = oSession.GetResponseBodyAsString();
+            responseBody.Replace("svdata=", "");
 
             try
             {
@@ -107,14 +135,14 @@ namespace KanColleDb
                 StreamReader sr = new StreamReader(resStream, enc);
                 string response = sr.ReadToEnd();
                 sr.Close();
-                return httpRes.StatusCode + ": " + response;
+                return oSession.responseCode + ": " + response;
             }
             catch (WebException ex)
             {
                 if (ex.Status == WebExceptionStatus.ProtocolError)
                 {
                     HttpWebResponse error = (HttpWebResponse)ex.Response;
-                    return error.ResponseUri + " " + error.StatusCode + ": " + error.StatusDescription;
+                    return error.ResponseUri + " " + oSession.responseCode + ": " + error.StatusDescription;
                 }
                 return ex.Message;
             }
@@ -127,7 +155,7 @@ namespace KanColleDb
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
-            Fiddler.FiddlerApplication.Startup(8877, true, false);
+            FiddlerApplication.Startup(8877, true, false);
             AppendText("----- Capture start\n");
         }
 
@@ -139,7 +167,7 @@ namespace KanColleDb
         private void button2_Click(object sender, EventArgs e)
         {
             AppendText("----- Capture stop\n");
-            Fiddler.FiddlerApplication.Shutdown();
+            FiddlerApplication.Shutdown();
         }
 
         // Windowsフォームコントロールに対して非同期な呼び出しを行うためのデリゲート
@@ -170,6 +198,7 @@ namespace KanColleDb
         {
             // Fiddlerのシャットダウン
             Fiddler.FiddlerApplication.Shutdown();
+            global::KanColleDbPost.Properties.Settings.Default.Save();
         }
     }
 }

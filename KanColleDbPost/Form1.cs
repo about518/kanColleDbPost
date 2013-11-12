@@ -103,7 +103,7 @@ namespace KanColleDbPost
         private string PostServer(Session oSession)
         {
             string token = textBox2.Text;                   // TODO: ユーザー毎のトークンを設定
-            string agent = "********************";          // TODO: アプリ毎のトークンを設定
+            string agent = "2rWgmbrhp-BXGN7nCGAn";          // TODO: アプリ毎のトークンを設定
             string url = oSession.fullUrl;
             string requestBody = oSession.GetRequestBodyAsString();
             string responseBody = oSession.GetResponseBodyAsString();

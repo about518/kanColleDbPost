@@ -43,7 +43,16 @@ namespace KanColleDbPost
             BATTLE_NIGHT_TO_DAY,
             BATTLERESULT,
             PRACTICE_BATTLE,
-            PRACTICE_BATTLERESULT
+            PRACTICE_BATTLERESULT,
+            MASTER_FURNITURE,
+            MASTER_MAPAREA,
+            MASTER_MAPCELL,
+            MASTER_MAPINFO,
+            MASTER_MISSION,
+            MASTER_SHIP,
+            MASTER_SLOTITEM,
+            MASTER_STYPE,
+            MASTER_USEITEM,
         };
 
         public Dictionary<UrlType, string> urls = new Dictionary<UrlType, string>()
@@ -64,6 +73,15 @@ namespace KanColleDbPost
             { UrlType.BATTLERESULT,             "api_req_sortie/battleresult"         },
             { UrlType.PRACTICE_BATTLE,          "api_req_practice/battle"             },
             { UrlType.PRACTICE_BATTLERESULT,    "api_req_practice/battle_result"      },
+            //{ UrlType.MASTER_FURNITURE,         "api_get_master/furniture"            },
+            //{ UrlType.MASTER_MAPAREA,           "api_get_master/maparea"              },
+            //{ UrlType.MASTER_MAPCELL,           "api_get_master/mapcell"              },
+            //{ UrlType.MASTER_MAPINFO,           "api_get_master/mapinfo"              },
+            //{ UrlType.MASTER_MISSION,           "api_get_master/mission"              },
+            //{ UrlType.MASTER_SHIP,              "api_get_master/ship"                 },
+            //{ UrlType.MASTER_SLOTITEM,          "api_get_master/slotitem"             },
+            //{ UrlType.MASTER_STYPE,             "api_get_master/stype"                },
+            //{ UrlType.MASTER_USEITEM,           "api_get_master/useitem"              },
         };
         
         void FiddlerApplication_AfterSessionComplete(Fiddler.Session oSession)
@@ -103,7 +121,7 @@ namespace KanColleDbPost
         private string PostServer(Session oSession)
         {
             string token = textBox2.Text;                   // TODO: ユーザー毎のトークンを設定
-            string agent = "2rWgmbrhp-BXGN7nCGAn";          // TODO: アプリ毎のトークンを設定
+            string agent = "********************";          // TODO: アプリ毎のトークンを設定
             string url = oSession.fullUrl;
             string requestBody = oSession.GetRequestBodyAsString();
             string responseBody = oSession.GetResponseBodyAsString();
@@ -155,20 +173,20 @@ namespace KanColleDbPost
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
-            FiddlerApplication.Startup(8877, true, false);
-            AppendText("----- Capture start\n");
+            if( button1.Text == "開始" )
+            {
+                FiddlerApplication.Startup(8877, true, false);
+                AppendText("----- Capture start\n");
+                button1.Text = "停止";
+            }
+            else
+            {
+                AppendText("----- Capture stop\n");
+                FiddlerApplication.Shutdown();
+                button1.Text = "開始";
+            }
         }
 
-        /// <summary>
-        /// キャプチャ終了
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void button2_Click(object sender, EventArgs e)
-        {
-            AppendText("----- Capture stop\n");
-            FiddlerApplication.Shutdown();
-        }
 
         // Windowsフォームコントロールに対して非同期な呼び出しを行うためのデリゲート
         delegate void SetTextCallback(string text);

@@ -74,7 +74,7 @@ namespace KanColleDbPost
             { UrlType.BATTLERESULT,             "api_req_sortie/battleresult"         },
             { UrlType.PRACTICE_BATTLE,          "api_req_practice/battle"             },
             { UrlType.PRACTICE_BATTLERESULT,    "api_req_practice/battle_result"      },
-            { UrlType.MASTER_FURNITURE,         "api_get_master/furniture"            },
+            //{ UrlType.MASTER_FURNITURE,         "api_get_master/furniture"            },
             //{ UrlType.MASTER_MAPAREA,           "api_get_master/maparea"              },
             //{ UrlType.MASTER_MAPCELL,           "api_get_master/mapcell"              },
             //{ UrlType.MASTER_MAPINFO,           "api_get_master/mapinfo"              },

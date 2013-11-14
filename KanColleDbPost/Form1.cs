@@ -10,6 +10,7 @@ using System.Diagnostics;
 using System.Net;
 using System.IO;
 using System.Web;
+using System.Threading.Tasks;
 using Fiddler;
 
 namespace KanColleDbPost
@@ -73,7 +74,7 @@ namespace KanColleDbPost
             { UrlType.BATTLERESULT,             "api_req_sortie/battleresult"         },
             { UrlType.PRACTICE_BATTLE,          "api_req_practice/battle"             },
             { UrlType.PRACTICE_BATTLERESULT,    "api_req_practice/battle_result"      },
-            //{ UrlType.MASTER_FURNITURE,         "api_get_master/furniture"            },
+            { UrlType.MASTER_FURNITURE,         "api_get_master/furniture"            },
             //{ UrlType.MASTER_MAPAREA,           "api_get_master/maparea"              },
             //{ UrlType.MASTER_MAPCELL,           "api_get_master/mapcell"              },
             //{ UrlType.MASTER_MAPINFO,           "api_get_master/mapinfo"              },
@@ -86,36 +87,39 @@ namespace KanColleDbPost
         
         void FiddlerApplication_AfterSessionComplete(Fiddler.Session oSession)
         {
-            string url = oSession.fullUrl;
-            if( url.IndexOf("/kcsapi/") <= 0 )
+            Task.Factory.StartNew(() =>
             {
+                string url = oSession.fullUrl;
+                if (url.IndexOf("/kcsapi/") <= 0)
+                {
+                    if (checkBox1.Checked)
+                    {
+                        AppendText(url + "\n");
+                    }
+                    return;
+                }
+
+                foreach (KeyValuePair<UrlType, string> kvp in urls)
+                {
+                    if (url.IndexOf(kvp.Value) > 0)
+                    {
+                        string responseBody = oSession.GetResponseBodyAsString();
+                        responseBody.Replace("svdata=", "");
+
+                        string str = "Post server from " + url + "\n";
+                        AppendText(str);
+
+                        string res = PostServer(oSession);
+                        str = "Post response : " + res + "\n";
+                        AppendText(str);
+                        return;
+                    }
+                }
                 if (checkBox1.Checked)
                 {
                     AppendText(url + "\n");
                 }
-                return;
-            }
-
-            foreach (KeyValuePair<UrlType, string> kvp in urls)
-            {
-                if (url.IndexOf(kvp.Value) > 0)
-                {
-                    string responseBody = oSession.GetResponseBodyAsString();
-                    responseBody.Replace("svdata=", "");
-
-                    string str = "Post server from " + url + "\n";
-                    AppendText(str);
-
-                    string res = PostServer(oSession);
-                    str = "Post response : " + res + "\n";
-                    AppendText(str);
-                    return;
-                }
-            }
-            if (checkBox1.Checked)
-            {
-                AppendText(url + "\n");
-            }
+            });
         }
 
         private string PostServer(Session oSession)

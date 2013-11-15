@@ -87,18 +87,17 @@ namespace KanColleDbPost
         
         void FiddlerApplication_AfterSessionComplete(Fiddler.Session oSession)
         {
+            string url = oSession.fullUrl;
+            if (url.IndexOf("/kcsapi/") <= 0)
+            {
+                if (checkBox1.Checked)
+                {
+                    AppendText(url + "\n");
+                }
+                return;
+            }
             Task.Factory.StartNew(() =>
             {
-                string url = oSession.fullUrl;
-                if (url.IndexOf("/kcsapi/") <= 0)
-                {
-                    if (checkBox1.Checked)
-                    {
-                        AppendText(url + "\n");
-                    }
-                    return;
-                }
-
                 foreach (KeyValuePair<UrlType, string> kvp in urls)
                 {
                     if (url.IndexOf(kvp.Value) > 0)

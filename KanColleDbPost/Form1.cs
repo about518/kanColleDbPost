@@ -24,9 +24,27 @@ namespace KanColleDbPost
 
         private void Form1_Load(object sender, EventArgs e)
         {
+            FiddlerApplication.BeforeRequest += FiddlerApplication_BeforeRequest;
             FiddlerApplication.AfterSessionComplete += FiddlerApplication_AfterSessionComplete;
         }
 
+        public string[] kanColleServers =
+        {
+            "203.104.105.167",
+            "125.6.184.15",
+            "125.6.184.16",
+            "125.6.187.205",
+            "125.6.187.229",
+            "125.6.187.253",
+            "125.6.188.25",
+            "203.104.248.135",
+            "125.6.189.7",
+            "125.6.189.39",
+            "125.6.189.71",
+            "125.6.189.103",
+            "125.6.189.135",
+        };
+        
         public enum UrlType
         {
             SHIP2,
@@ -84,20 +102,37 @@ namespace KanColleDbPost
             //{ UrlType.MASTER_STYPE,             "api_get_master/stype"                },
             //{ UrlType.MASTER_USEITEM,           "api_get_master/useitem"              },
         };
-        
-        void FiddlerApplication_AfterSessionComplete(Fiddler.Session oSession)
+
+        void FiddlerApplication_BeforeRequest(Session oSession)
         {
-            string url = oSession.fullUrl;
-            if (url.IndexOf("/kcsapi/") <= 0)
+            bool isKanColleServer = false;
+            foreach (string ip in kanColleServers)
             {
-                if (checkBox1.Checked)
+                if (oSession.hostname == ip)
                 {
-                    AppendText(url + "\n");
+                    isKanColleServer = true;
+                    break;
                 }
+            }
+            if (!isKanColleServer)
+            {
+                // 艦これサーバー以外のリクエストはすべてバイパス
+                oSession.bypassGateway = true;
+                oSession.bBufferResponse = false;
+            }
+        }
+
+        void FiddlerApplication_AfterSessionComplete(Session oSession)
+        {
+            if (oSession.bypassGateway)
+            {
+                // バイパスされたセッションではなにもしない
                 return;
             }
+
             Task.Factory.StartNew(() =>
             {
+                string url = oSession.fullUrl;
                 foreach (KeyValuePair<UrlType, string> kvp in urls)
                 {
                     if (url.IndexOf(kvp.Value) > 0)

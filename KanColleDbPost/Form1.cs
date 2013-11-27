@@ -48,6 +48,7 @@ namespace KanColleDbPost
         public enum UrlType
         {
             SHIP2,
+            SHIP3,
             DECK,
             DECK_PORT,
             BASIC,
@@ -77,6 +78,7 @@ namespace KanColleDbPost
         public Dictionary<UrlType, string> urls = new Dictionary<UrlType, string>()
         {
             { UrlType.SHIP2,                    "api_get_member/ship2"                },
+            { UrlType.SHIP3,                    "api_get_member/ship3"                },
             { UrlType.DECK,                     "api_get_member/deck"                 },
             { UrlType.DECK_PORT,                "api_get_member/deck_port"            },
             { UrlType.BASIC,                    "api_get_member/basic"                },
@@ -92,15 +94,6 @@ namespace KanColleDbPost
             { UrlType.BATTLERESULT,             "api_req_sortie/battleresult"         },
             { UrlType.PRACTICE_BATTLE,          "api_req_practice/battle"             },
             { UrlType.PRACTICE_BATTLERESULT,    "api_req_practice/battle_result"      },
-            //{ UrlType.MASTER_FURNITURE,         "api_get_master/furniture"            },
-            //{ UrlType.MASTER_MAPAREA,           "api_get_master/maparea"              },
-            //{ UrlType.MASTER_MAPCELL,           "api_get_master/mapcell"              },
-            //{ UrlType.MASTER_MAPINFO,           "api_get_master/mapinfo"              },
-            //{ UrlType.MASTER_MISSION,           "api_get_master/mission"              },
-            //{ UrlType.MASTER_SHIP,              "api_get_master/ship"                 },
-            //{ UrlType.MASTER_SLOTITEM,          "api_get_master/slotitem"             },
-            //{ UrlType.MASTER_STYPE,             "api_get_master/stype"                },
-            //{ UrlType.MASTER_USEITEM,           "api_get_master/useitem"              },
         };
 
         void FiddlerApplication_BeforeRequest(Session oSession)

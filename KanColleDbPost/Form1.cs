@@ -43,6 +43,7 @@ namespace KanColleDbPost
             "125.6.189.71",
             "125.6.189.103",
             "125.6.189.135",
+            "125.6.189.167",
         };
         
         public enum UrlType

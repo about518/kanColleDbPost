@@ -20,7 +20,8 @@ namespace KanColleDbPost
         public Form1()
         {
             InitializeComponent();
-        }
+			this.ShowInTaskbar = false;
+		}
 
         private void Form1_Load(object sender, EventArgs e)
         {
@@ -254,5 +255,47 @@ namespace KanColleDbPost
             Fiddler.FiddlerApplication.Shutdown();
             global::KanColleDbPost.Properties.Settings.Default.Save();
         }
+
+		private void Form1_FormClosing(object sender, FormClosingEventArgs e)
+		{
+			// トレイリストのアイコンを非表示にする  
+			notifyIcon1.Visible = false;
+		}
+
+		private void Form1_ClientSizeChanged(object sender, EventArgs e)
+		{
+			if (this.WindowState == System.Windows.Forms.FormWindowState.Minimized)
+			{
+				// フォームが最小化の状態であればフォームを非表示にする  
+				this.Hide();
+				// トレイリストのアイコンを表示する  
+				notifyIcon1.Visible = true;
+			}   
+		}
+
+		private void notifyIcon1_DoubleClick(object sender, EventArgs e)
+		{
+			// フォームを表示する  
+			this.Visible = true;
+			// 現在の状態が最小化の状態であれば通常の状態に戻す  
+			if (this.WindowState == FormWindowState.Minimized)
+			{
+				this.WindowState = FormWindowState.Normal;
+			}
+			// フォームをアクティブにする  
+			this.Activate();
+		}
+
+		private void toolStripMenuItem1_Click(object sender, EventArgs e)
+		{
+			notifyIcon1_DoubleClick(sender, e);
+		}
+
+		private void toolStripMenuItem2_Click(object sender, EventArgs e)
+		{
+			this.Close();
+		}
+
+
     }
 }

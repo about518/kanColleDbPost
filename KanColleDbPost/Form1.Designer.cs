@@ -35,10 +35,10 @@
 			this.label1 = new System.Windows.Forms.Label();
 			this.checkBox1 = new System.Windows.Forms.CheckBox();
 			this.notifyIcon1 = new System.Windows.Forms.NotifyIcon(this.components);
-			this.textBox2 = new System.Windows.Forms.TextBox();
 			this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
 			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.textBox2 = new System.Windows.Forms.TextBox();
 			this.contextMenuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -92,23 +92,13 @@
 			this.notifyIcon1.Text = "艦これ統計データベース送信";
 			this.notifyIcon1.DoubleClick += new System.EventHandler(this.notifyIcon1_DoubleClick);
 			// 
-			// textBox2
-			// 
-			this.textBox2.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::KanColleDbPost.Properties.Settings.Default, "AccessKey", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
-			this.textBox2.Location = new System.Drawing.Point(77, 259);
-			this.textBox2.MaxLength = 27;
-			this.textBox2.Name = "textBox2";
-			this.textBox2.Size = new System.Drawing.Size(308, 19);
-			this.textBox2.TabIndex = 3;
-			this.textBox2.Text = global::KanColleDbPost.Properties.Settings.Default.AccessKey;
-			// 
 			// contextMenuStrip1
 			// 
 			this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.toolStripMenuItem1,
             this.toolStripMenuItem2});
 			this.contextMenuStrip1.Name = "contextMenuStrip1";
-			this.contextMenuStrip1.Size = new System.Drawing.Size(191, 70);
+			this.contextMenuStrip1.Size = new System.Drawing.Size(191, 48);
 			// 
 			// toolStripMenuItem1
 			// 
@@ -123,6 +113,16 @@
 			this.toolStripMenuItem2.Size = new System.Drawing.Size(190, 22);
 			this.toolStripMenuItem2.Text = "終了(&X)";
 			this.toolStripMenuItem2.Click += new System.EventHandler(this.toolStripMenuItem2_Click);
+			// 
+			// textBox2
+			// 
+			this.textBox2.DataBindings.Add(new System.Windows.Forms.Binding("Text", global::KanColleDbPost.Properties.Settings.Default, "AccessKey", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
+			this.textBox2.Location = new System.Drawing.Point(77, 259);
+			this.textBox2.MaxLength = 27;
+			this.textBox2.Name = "textBox2";
+			this.textBox2.Size = new System.Drawing.Size(308, 19);
+			this.textBox2.TabIndex = 3;
+			this.textBox2.Text = global::KanColleDbPost.Properties.Settings.Default.AccessKey;
 			// 
 			// Form1
 			// 
@@ -140,7 +140,6 @@
 			this.Name = "Form1";
 			this.Text = "艦これ統計データベース送信";
 			this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form1_FormClosing);
-			this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.Form1_FormClosed);
 			this.Load += new System.EventHandler(this.Form1_Load);
 			this.ClientSizeChanged += new System.EventHandler(this.Form1_ClientSizeChanged);
 			this.contextMenuStrip1.ResumeLayout(false);

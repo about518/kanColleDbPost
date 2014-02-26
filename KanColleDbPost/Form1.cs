@@ -28,7 +28,18 @@ namespace KanColleDbPost
         {
             FiddlerApplication.BeforeRequest += FiddlerApplication_BeforeRequest;
             FiddlerApplication.AfterSessionComplete += FiddlerApplication_AfterSessionComplete;
+			Application.ApplicationExit += Application_ApplicationExit;
         }
+
+		void Application_ApplicationExit(object sender, EventArgs e)
+		{
+			if( isCapture )
+			{
+				// Fiddlerのシャットダウン
+				FiddlerApplication.Shutdown();
+			}
+			global::KanColleDbPost.Properties.Settings.Default.Save();
+		}
 
         public string[] kanColleServers =
         {
@@ -102,6 +113,8 @@ namespace KanColleDbPost
             { UrlType.PRACTICE_BATTLE,          "api_req_practice/battle"             },
             { UrlType.PRACTICE_BATTLERESULT,    "api_req_practice/battle_result"      },
         };
+
+		private bool isCapture = false;
 
         void FiddlerApplication_BeforeRequest(Session oSession)
         {
@@ -212,9 +225,10 @@ namespace KanColleDbPost
         /// <param name="e"></param>
         private void button1_Click(object sender, EventArgs e)
         {
-            if( button1.Text == "開始" )
+            if( !isCapture )
             {
                 FiddlerApplication.Startup(8877, true, false);
+				isCapture = true;
                 AppendText("----- Capture start\n");
                 button1.Text = "停止";
             }
@@ -222,6 +236,7 @@ namespace KanColleDbPost
             {
                 AppendText("----- Capture stop\n");
                 FiddlerApplication.Shutdown();
+				isCapture = false;
                 button1.Text = "開始";
             }
         }
@@ -249,13 +264,6 @@ namespace KanColleDbPost
                 this.textBox1.SelectionStart = textBox1.Text.Length;
                 this.textBox1.ScrollToCaret();
             }
-        }
-
-        private void Form1_FormClosed(object sender, FormClosedEventArgs e)
-        {
-            // Fiddlerのシャットダウン
-            Fiddler.FiddlerApplication.Shutdown();
-            global::KanColleDbPost.Properties.Settings.Default.Save();
         }
 
 		private void Form1_FormClosing(object sender, FormClosingEventArgs e)

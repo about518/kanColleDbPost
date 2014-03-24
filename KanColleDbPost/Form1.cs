@@ -43,6 +43,7 @@ namespace KanColleDbPost
 
         public string[] kanColleServers =
         {
+			"kadokawag001.flxsrv.biz",
             "203.104.105.167",
             "125.6.184.15",
             "125.6.184.16",
@@ -59,6 +60,7 @@ namespace KanColleDbPost
             "125.6.189.167",
             "125.6.189.215",
             "125.6.189.247",
+			"203.104.209.23",
         };
         
         public enum UrlType

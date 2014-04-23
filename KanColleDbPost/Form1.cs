@@ -65,11 +65,7 @@ namespace KanColleDbPost
         
         public enum UrlType
         {
-            SHIP2,
-            SHIP3,
-            DECK,
-            DECK_PORT,
-            BASIC,
+            PORT,
             KDOCK,
             CREATESHIP,
             GETSHIP,
@@ -83,24 +79,12 @@ namespace KanColleDbPost
             BATTLERESULT,
             PRACTICE_BATTLE,
             PRACTICE_BATTLERESULT,
-            MASTER_FURNITURE,
-            MASTER_MAPAREA,
-            MASTER_MAPCELL,
-            MASTER_MAPINFO,
-            MASTER_MISSION,
-            MASTER_SHIP,
-            MASTER_SLOTITEM,
-            MASTER_STYPE,
-            MASTER_USEITEM,
+			//MASTER,
         };
 
         public Dictionary<UrlType, string> urls = new Dictionary<UrlType, string>()
         {
-            { UrlType.SHIP2,                    "api_get_member/ship2"                },
-            { UrlType.SHIP3,                    "api_get_member/ship3"                },
-            { UrlType.DECK,                     "api_get_member/deck"                 },
-            { UrlType.DECK_PORT,                "api_get_member/deck_port"            },
-            { UrlType.BASIC,                    "api_get_member/basic"                },
+            { UrlType.PORT,                     "api_port/port"                       },
             { UrlType.KDOCK,                    "api_get_member/kdock"                },
             { UrlType.CREATESHIP,               "api_req_kousyou/createship"          },
             { UrlType.GETSHIP,                  "api_req_kousyou/getship"             },
@@ -114,6 +98,7 @@ namespace KanColleDbPost
             { UrlType.BATTLERESULT,             "api_req_sortie/battleresult"         },
             { UrlType.PRACTICE_BATTLE,          "api_req_practice/battle"             },
             { UrlType.PRACTICE_BATTLERESULT,    "api_req_practice/battle_result"      },
+			//{ UrlType.MASTER,                   "api_start2"                          },
         };
 
 		private bool isCapture = false;
@@ -183,7 +168,7 @@ namespace KanColleDbPost
 
             try
             {
-                WebRequest req = WebRequest.Create("http://api.kancolle-db.net/1/");
+                WebRequest req = WebRequest.Create("http://api.kancolle-db.net/2/");
                 req.Method = "POST";
                 req.ContentType = "application/x-www-form-urlencoded";
 

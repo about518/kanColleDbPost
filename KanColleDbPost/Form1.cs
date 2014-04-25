@@ -66,6 +66,7 @@ namespace KanColleDbPost
         public enum UrlType
         {
             PORT,
+            SHIP2,
             KDOCK,
             CREATESHIP,
             GETSHIP,
@@ -85,6 +86,7 @@ namespace KanColleDbPost
         public Dictionary<UrlType, string> urls = new Dictionary<UrlType, string>()
         {
             { UrlType.PORT,                     "api_port/port"                       },
+            { UrlType.SHIP2,                    "api_get_member/ship2"                },
             { UrlType.KDOCK,                    "api_get_member/kdock"                },
             { UrlType.CREATESHIP,               "api_req_kousyou/createship"          },
             { UrlType.GETSHIP,                  "api_req_kousyou/getship"             },
@@ -159,7 +161,7 @@ namespace KanColleDbPost
         private string PostServer(Session oSession)
         {
             string token = textBox2.Text;                   // TODO: ユーザー毎のトークンを設定
-			string agent = "";          // TODO: アプリ毎のトークンを設定
+            string agent = "";          // TODO: アプリ毎のトークンを設定
             string url = oSession.fullUrl;
 			string requestBody = HttpUtility.HtmlDecode(oSession.GetRequestBodyAsString());
 			requestBody = Regex.Replace(requestBody, @"&api(_|%5F)token=[0-9a-f]+", "");	// api_tokenを送信しないように削除

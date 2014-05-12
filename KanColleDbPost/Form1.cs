@@ -168,7 +168,7 @@ namespace KanColleDbPost
 			string agent = "";          // TODO: アプリ毎のトークンを設定
             string url = oSession.fullUrl;
 			string requestBody = HttpUtility.HtmlDecode(oSession.GetRequestBodyAsString());
-			requestBody = Regex.Replace(requestBody, @"&api(_|%5F)token=[0-9a-f]+", "");	// api_tokenを送信しないように削除
+            requestBody = Regex.Replace(requestBody, @"&api(_|%5F)token=[0-9a-f]+|api(_|%5F)token=[0-9a-f]+&?", "");	// api_tokenを送信しないように削除
             string responseBody = oSession.GetResponseBodyAsString();
             responseBody.Replace("svdata=", "");
 

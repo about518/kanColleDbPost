@@ -82,6 +82,10 @@ namespace KanColleDbPost
             BATTLERESULT,
             PRACTICE_BATTLE,
             PRACTICE_BATTLERESULT,
+			COMBINED_BATTLE,
+			COMBINED_BATTLE_AIR,
+			COMBINED_BATTLE_MIDNIGHT,
+			COMBINED_BATTLE_RESULT,
 			//MASTER,
         };
 
@@ -104,6 +108,10 @@ namespace KanColleDbPost
             { UrlType.BATTLERESULT,             "api_req_sortie/battleresult"         },
             { UrlType.PRACTICE_BATTLE,          "api_req_practice/battle"             },
             { UrlType.PRACTICE_BATTLERESULT,    "api_req_practice/battle_result"      },
+            { UrlType.COMBINED_BATTLE,          "api_req_combined_battle/battle"      },
+            { UrlType.COMBINED_BATTLE_AIR,      "api_req_combined_battle/airbattle"   },
+            { UrlType.COMBINED_BATTLE_MIDNIGHT, "api_req_combined_battle/midnight_battle"},
+            { UrlType.COMBINED_BATTLE_RESULT,   "api_req_combined_battle/battleresult"},
 			//{ UrlType.MASTER,                   "api_start2"                          },
         };
 

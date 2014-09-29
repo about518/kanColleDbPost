@@ -26,7 +26,6 @@ namespace KanColleDbPost
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            FiddlerApplication.BeforeRequest += FiddlerApplication_BeforeRequest;
             FiddlerApplication.AfterSessionComplete += FiddlerApplication_AfterSessionComplete;
 			Application.ApplicationExit += Application_ApplicationExit;
         }
@@ -41,28 +40,6 @@ namespace KanColleDbPost
 			global::KanColleDbPost.Properties.Settings.Default.Save();
 		}
 
-        public string[] kanColleServers =
-        {
-			"kadokawag001.flxsrv.biz",
-            "203.104.105.167",
-            "125.6.184.15",
-            "125.6.184.16",
-            "125.6.187.205",
-            "125.6.187.229",
-            "125.6.187.253",
-            "125.6.188.25",
-            "203.104.248.135",
-            "125.6.189.7",
-            "125.6.189.39",
-            "125.6.189.71",
-            "125.6.189.103",
-            "125.6.189.135",
-            "125.6.189.167",
-            "125.6.189.215",
-            "125.6.189.247",
-			"203.104.209.23",
-        };
-        
         public enum UrlType
         {
             PORT,
@@ -86,7 +63,7 @@ namespace KanColleDbPost
 			COMBINED_BATTLE_AIR,
 			COMBINED_BATTLE_MIDNIGHT,
 			COMBINED_BATTLE_RESULT,
-			//MASTER,
+            //MASTER,
         };
 
         public Dictionary<UrlType, string> urls = new Dictionary<UrlType, string>()
@@ -112,68 +89,47 @@ namespace KanColleDbPost
             { UrlType.COMBINED_BATTLE_AIR,      "api_req_combined_battle/airbattle"   },
             { UrlType.COMBINED_BATTLE_MIDNIGHT, "api_req_combined_battle/midnight_battle"},
             { UrlType.COMBINED_BATTLE_RESULT,   "api_req_combined_battle/battleresult"},
-			//{ UrlType.MASTER,                   "api_start2"                          },
+            //{ UrlType.MASTER,                   "api_start2"                          },
         };
 
 		private bool isCapture = false;
 
-        void FiddlerApplication_BeforeRequest(Session oSession)
-        {
-            bool isKanColleServer = false;
-            foreach (string ip in kanColleServers)
-            {
-                if (oSession.hostname == ip)
-                {
-                    isKanColleServer = true;
-                    break;
-                }
-            }
-            if (!isKanColleServer)
-            {
-                // 艦これサーバー以外のリクエストはすべてバイパス
-                oSession.bypassGateway = true;
-                oSession.bBufferResponse = false;
-            }
-        }
-
         void FiddlerApplication_AfterSessionComplete(Session oSession)
         {
-            if (oSession.bypassGateway)
+            if (oSession.PathAndQuery.StartsWith("/kcsapi") &&
+                oSession.oResponse.MIMEType.Equals("text/plain"))
             {
-                // バイパスされたセッションではなにもしない
-                return;
-            }
-
-            Task.Factory.StartNew(() =>
-            {
-                string url = oSession.fullUrl;
-                foreach (KeyValuePair<UrlType, string> kvp in urls)
+                Task.Factory.StartNew(() =>
                 {
-                    if (url.IndexOf(kvp.Value) > 0)
+                    string url = oSession.fullUrl;
+                    foreach (KeyValuePair<UrlType, string> kvp in urls)
                     {
-                        string responseBody = oSession.GetResponseBodyAsString();
-                        responseBody.Replace("svdata=", "");
+                        if (url.IndexOf(kvp.Value) > 0)
+                        {
+                            string responseBody = oSession.GetResponseBodyAsString();
+                            responseBody.Replace("svdata=", "");
 
-                        string str = "Post server from " + url + "\n";
-                        AppendText(str);
+                            string str = "Post server from " + url + "\n";
+                            AppendText(str);
 
-                        string res = PostServer(oSession);
-                        str = "Post response : " + res + "\n";
-                        AppendText(str);
-                        return;
+                            string res = PostServer(oSession);
+                            str = "Post response : " + res + "\n";
+                            AppendText(str);
+                            return;
+                        }
                     }
-                }
-                if (checkBox1.Checked)
-                {
-                    AppendText(url + "\n");
-                }
-            });
+                    if (checkBox1.Checked)
+                    {
+                        AppendText(url + "\n");
+                    }
+                });
+            }
         }
 
         private string PostServer(Session oSession)
         {
             string token = textBox2.Text;                   // TODO: ユーザー毎のトークンを設定
-			string agent = "";          // TODO: アプリ毎のトークンを設定
+            string agent = "";          // TODO: アプリ毎のトークンを設定
             string url = oSession.fullUrl;
 			string requestBody = HttpUtility.HtmlDecode(oSession.GetRequestBodyAsString());
             requestBody = Regex.Replace(requestBody, @"&api(_|%5F)token=[0-9a-f]+|api(_|%5F)token=[0-9a-f]+&?", "");	// api_tokenを送信しないように削除
